@@ -90,42 +90,29 @@ class Map {
 
 			for ( int current_line = 1; current_line < (width * 3 + 1) ; current_line++ ) { 
 				if ( current_line % 3 == 1 ) { 
-					// first line in every box 
+					// first line in every row of boxes. 
 					for ( int i = 0; i < length; i++ ) {
 						cout << "   |";
 					}
 					cout << "\n";
 				}
-				else if ( current_line == 2 ) { 
-					// second line of top row in which the players destination '1' must be outputted.
-					player_row.clear();
-					for ( int i = 0; i < length; i++ ) {
-						player_row = player_row + " ";
-						if ( length/2 == i ) player_row = player_row + "1";
-						else if ( rooms[current_line/3][i].getTrapStatus() == true ) player_row += "X";
-						else player_row = player_row + " ";
-						player_row = player_row + " |";
-					}
-					if (current_line == display_y) {
-						player_row[display_x] = 'O'; // Rewrite designated box with a 'O'
-					}
-					cout << player_row << "\n";
-				} 
-				else if ( current_line == display_y ) {
-					// second line in every room and it's the line in which player "O" is at.
+				else if ( current_line == 2 || current_line == display_y ) {
+					// second line of either top row box or second line in box row in which player is in.
 					player_row.clear();
 					for ( int i = 0; i < length; i++ ) { // iterate through every '   |' block
 						// each block only consists of 4 characters: ' ? |'
 						player_row.append(" ");
-						if ( rooms[y][i].getTrapStatus() == true ) player_row.append("X");
+						if ( current_line == 2 && length/2 == i ) player_row = player_row + "1";
+						else if ( rooms[current_line/3][i].getTrapStatus() == true ) player_row.append("X");
 						else player_row.append(" ");
 						player_row = player_row + " |";
 					}
-					player_row[display_x] = 'O'; // Rewrite designated box with a 'O'
+					// Rewrite designated box with player 'O'
+					if (current_line == display_y) player_row[display_x] = 'O'; 
 					cout << player_row << "\n";
 				} 
 				else if ( current_line % 3 == 2 && current_line != display_y ) { 
-					// second line in every box but not line in which player is in.
+					// second line in every row of boxes but not row in which player is in.
 					for ( int i = 0; i < length; i++ ) {
 						cout << " ";
 						if ( rooms[current_line/3][i].getTrapStatus() == true ) cout << "X";
@@ -135,7 +122,7 @@ class Map {
 					cout << "\n";
 				} 
 				else { 
-					// third line in every box
+					// third line in every row of boxes
 					for ( int i = 0; i < length; i++ ) {
 						cout << "___|";
 					}
