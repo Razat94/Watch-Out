@@ -9,8 +9,6 @@ bool die( const string & msg ){
 }
 
 class Room {
-	// if all the rooms traps are on, then you can proceed to the next map.
-	
 	private:
 		bool trap; 
 		
@@ -69,6 +67,7 @@ class Map {
 		bool levelCleared() {
 			for ( int y = 0; y < width; y++ ) {
 				for (int x = 0; x < length; x++ ) {
+					// if there exists a room where a trap is not set, then the map is not cleared.
 					if ( rooms[y][x].getTrapStatus() == false ) return false;
 				}
 			}
@@ -83,7 +82,6 @@ class Map {
 			int display_y = 2 + ( 3 * y ); 
 	
 			cout << "\nYou are currently here: \n";
-			
 			// top line:
 			for ( int i = 0; i < length; i++ ) {
 				cout << "___ ";
@@ -91,7 +89,6 @@ class Map {
 			cout << "\n";
 
 			for ( int current_line = 1; current_line < (width * 3 + 1) ; current_line++ ) { 
-			
 				if ( current_line % 3 == 1 ) { 
 					// first line in every box 
 					for ( int i = 0; i < length; i++ ) {
@@ -162,7 +159,7 @@ class Position {
 		}
 		
 		Position(Map maps) {
-			// player is located at the bottom row in the middle of the grid
+			// player is initially located at the bottom row in the middle of the grid
 			y = maps.getWidth() - 1; 
 			x = maps.getLength() / 2;
 		}
@@ -181,21 +178,8 @@ class Position {
 		}
 		
 		void setTrap ( int y, int x, Map &maps ) {
-			// See if the tile that you stepped on is cracked. 
-			//cout << "\n";
-			//cout << maps.getTrap(y,x);
-	
-			if ( maps.getTrap ( y, x ) == true ) {
-				die ( "Game Over" );
-			} 
-			else {
-				maps.setTrapOn( y, x);
-			}
-	
-			// See if the tile is now cracked.
-			//cout << "\n";
-			//cout << maps.getTrap(y,x);
-			//cout << "\n";
+			if ( maps.getTrap ( y, x ) == true ) die ( "Game Over" );
+			else maps.setTrapOn( y, x);
 		}
 		
 		void goNorth( Map &map ) { 
@@ -233,7 +217,6 @@ class Position {
 			}
 			else cout << "\nYou can't go that way.\nPosition has not been changed.\n\n";
 		}
-
 };
 
 void options() {
@@ -248,8 +231,8 @@ void introduction( int y, int x, Map map ) {
 	cout << "*******************************************\n";
 	cout << "Watch Out!\n\n";
 	cout  << "*******************************************\n";
-	cout << "Watch Out! is a puzzle game where you must maneuver yourself ('O') to where the '1' is located at.\n";
-	cout << "The catch though is that you can only walk through each room once and only once.\n";
+	cout << "Watch Out! is a puzzle game where you must maneuver yourself ('O') to where the '1' is located at.";
+	cout << "\nThe catch though is that you can only walk through each room once and only once.\n";
 	cout << "Rooms labeled with an 'X' are rooms that you can not visit.\n";
 	cout << "You must have an 'X' in every room before you walk to the room where the '1' is at.\n";
 	map.display(y,x);
@@ -338,7 +321,7 @@ int main () {
 	cout << "2nd Level Cleared!";
 	answer =  '\0';
 	
-	// create second level
+	// create third level
 	Map thirdLevel(4,11);
 	me.setPosition(thirdLevel);
 	
@@ -351,7 +334,7 @@ int main () {
 	
 	thirdLevel.display( me.getY() , me.getX() );
 	
-	// second level loop
+	// third level loop
 	while ( thirdLevel.levelCleared() == false ) {
 		cout << "What would you like to do? ";
 		cin >> answer;
