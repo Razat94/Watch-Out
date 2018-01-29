@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include <cstdlib> // include die function
+#include <cstdlib> // used to include the die function
 using namespace std;
 
 bool die( const string & msg ){
@@ -29,8 +29,8 @@ class Room {
 class Map {
 	private:
 		Room rooms[20][20];
-		int width; // how many vertical boxes the grid has.
-		int length; // how many horizantal boxes the grid has.
+		int width;  // how many boxes the grid has vertically
+		int length; // how many boxes the grid has horizantally
 	
 	public:
 		Map() {	
@@ -89,52 +89,43 @@ class Map {
 			cout << "\n";
 
 			for ( int current_line = 1; current_line < (width * 3 + 1) ; current_line++ ) { 
+				// first line in every row of boxes. 
 				if ( current_line % 3 == 1 ) { 
-					// first line in every row of boxes. 
 					for ( int i = 0; i < length; i++ ) {
 						cout << "   |";
 					}
 					cout << "\n";
 				}
-				else if ( current_line == 2 || current_line == display_y ) {
-					// second line of either top row box or second line in box row in which player is in.
+				
+				// second line every row of boxes
+				else if ( current_line % 3 == 2 ) {
 					player_row.clear();
 					for ( int i = 0; i < length; i++ ) { // iterate through every '   |' block
 						// each block only consists of 4 characters: ' ? |'
 						player_row.append(" ");
-						if ( current_line == 2 && length/2 == i ) player_row = player_row + "1";
+						if ( current_line == 2 && length/2 == i ) player_row.append("1");
 						else if ( rooms[current_line/3][i].getTrapStatus() == true ) player_row.append("X");
 						else player_row.append(" ");
-						player_row = player_row + " |";
-					}
+						player_row.append(" |");
+					}	
 					// Rewrite designated box with player 'O'
 					if (current_line == display_y) player_row[display_x] = 'O'; 
 					cout << player_row << "\n";
 				} 
-				else if ( current_line % 3 == 2 && current_line != display_y ) { 
-					// second line in every row of boxes but not row in which player is in.
-					for ( int i = 0; i < length; i++ ) {
-						cout << " ";
-						if ( rooms[current_line/3][i].getTrapStatus() == true ) cout << "X";
-						else cout << " ";
-						cout << " |";
-					}
-					cout << "\n";
-				} 
+				
+				// third line in every row of boxes
 				else { 
-					// third line in every row of boxes
 					for ( int i = 0; i < length; i++ ) {
 						cout << "___|";
 					}
 					cout << "\n";
 				}
-			}
+			} // end of for loop
 			cout << "\n";
-		}
-};
+		} 
+}; 
 
 class Position {
-	
 	private:
 		int y;
 		int x;
@@ -268,7 +259,6 @@ int main () {
 	}
 	
 	cout << "1st Level Cleared!";
-	answer =  '\0';
 	
 	// create second level
 	Map secondLevel(3,7);
@@ -306,7 +296,6 @@ int main () {
 	}
 	
 	cout << "2nd Level Cleared!";
-	answer =  '\0';
 	
 	// create third level
 	Map thirdLevel(4,11);
@@ -346,4 +335,5 @@ int main () {
 	}
 	
 	cout << "CONGRATULATIONS YOU BEAT THE GAME :)";
+	
 } // end of main function
